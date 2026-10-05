@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Tsk!",
+  "version": "0.1.0",
+  "description": "The world's least ambitious popup-related browser extension.",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["tsk.css"],
+      "all_frames": true
+    }
+  ]
+}
