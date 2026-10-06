@@ -6,7 +6,7 @@ Tsk! highlights likely close buttons on annoying popup dialogs.
 
 That's it.
 
-![Tsk!](docs/tsk-lidl.png)
+![Tsk!](docs/tsk-demo.png)
 
 ## Why?
 

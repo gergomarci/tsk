@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Daily Scroll</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f5f3ef;
+        color: #24211f;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 1px solid #ddd8d2;
+      }
+
+      .topbar {
+        max-width: 1120px;
+        margin: auto;
+        padding: 22px 28px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        font-family: Georgia, serif;
+        font-size: 30px;
+        font-weight: bold;
+      }
+
+      nav {
+        display: flex;
+        gap: 28px;
+        color: #68625d;
+        font-size: 14px;
+      }
+
+      .hero {
+        max-width: 1120px;
+        margin: 58px auto 0;
+        padding: 0 28px;
+        display: grid;
+        grid-template-columns: 1.5fr 0.7fr;
+        gap: 56px;
+      }
+
+      .category {
+        color: #b04464;
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+      }
+
+      h1 {
+        margin: 14px 0 20px;
+        max-width: 760px;
+        font-family: Georgia, serif;
+        font-size: 54px;
+        line-height: 1.05;
+        font-weight: 600;
+      }
+
+      .dek {
+        max-width: 720px;
+        color: #66605b;
+        font-family: Georgia, serif;
+        font-size: 21px;
+        line-height: 1.5;
+      }
+
+      .byline {
+        margin-top: 28px;
+        font-size: 14px;
+        color: #77716c;
+      }
+
+      .sidebar {
+        border-left: 1px solid #d8d2cb;
+        padding-left: 34px;
+      }
+
+      .sidebar h2 {
+        margin-top: 0;
+        font-family: Georgia, serif;
+        font-size: 20px;
+      }
+
+      .sidebar article {
+        padding: 17px 0;
+        border-top: 1px solid #ddd8d2;
+        font-family: Georgia, serif;
+        line-height: 1.35;
+      }
+
+      .story {
+        max-width: 760px;
+        margin: 48px calc((100% - 1064px) / 2);
+        padding: 0 28px 160px;
+        font-family: Georgia, serif;
+        font-size: 18px;
+        line-height: 1.75;
+        color: #403b37;
+      }
+
+      /* Test controls deliberately stay below the normal screenshot area. */
+      .lab {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        z-index: 10000;
+        display: flex;
+        gap: 8px;
+        padding: 10px;
+        background: rgba(25, 22, 25, 0.92);
+        border-radius: 10px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .lab button {
+        border: 0;
+        border-radius: 6px;
+        padding: 8px 11px;
+        background: #454047;
+        color: white;
+        cursor: pointer;
+      }
+
+      .lab button:hover {
+        background: #625b65;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(20, 16, 18, 0.62);
+        backdrop-filter: blur(2px);
+      }
+
+      .modal {
+        position: relative;
+        width: min(520px, calc(100vw - 40px));
+        padding: 42px 44px 38px;
+        border: 0;
+        border-radius: 16px;
+        background: white;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
+        text-align: center;
+      }
+
+      .modal h2 {
+        margin: 0 0 12px;
+        font-family: Georgia, serif;
+        font-size: 31px;
+      }
+
+      .modal p {
+        color: #6e6763;
+        line-height: 1.55;
+      }
+
+      .modal .primary {
+        display: block;
+        width: 100%;
+        margin-top: 25px;
+        padding: 14px;
+        border: 0;
+        border-radius: 8px;
+        background: #b04464;
+        color: white;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .corner-x {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        width: 34px;
+        height: 34px;
+        border: 0;
+        background: transparent;
+        color: #777;
+        font-size: 25px;
+        line-height: 30px;
+        cursor: pointer;
+      }
+
+      /*
+         * Deliberately obnoxious promotion.
+         */
+      .promo-popup {
+        position: fixed;
+        z-index: 1001;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: min(620px, calc(100vw - 40px));
+        padding: 50px 50px 42px;
+        border-radius: 18px;
+        background: #fff;
+        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+        text-align: center;
+      }
+
+      .promo-popup .eyebrow {
+        color: #b04464;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 1.8px;
+      }
+
+      .promo-popup h2 {
+        margin: 10px 0;
+        font-size: 36px;
+      }
+
+      .promo-popup .offer {
+        margin: 18px 0 26px;
+        font-size: 18px;
+        color: #625b57;
+      }
+
+      .promo-popup .huge-cta {
+        width: 100%;
+        padding: 17px;
+        border: 0;
+        border-radius: 8px;
+        background: #1769e0;
+        color: white;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .promo-popup .quiet-dismiss {
+        margin-top: 18px;
+        border: 0;
+        background: transparent;
+        color: #aaa;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .promo-popup .tiny-close {
+        position: absolute;
+        top: 12px;
+        right: 13px;
+        width: 29px;
+        height: 29px;
+        border: 0;
+        background: transparent;
+        color: #aaa;
+        font-size: 20px;
+        cursor: pointer;
+      }
+
+      .corner-close {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        width: 34px;
+        height: 34px;
+        border: 0;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .corner-close::before,
+      .corner-close::after {
+        content: "";
+        position: absolute;
+        left: 16px;
+        top: 7px;
+        width: 2px;
+        height: 20px;
+        background: #777;
+      }
+
+      .corner-close::before {
+        transform: rotate(45deg);
+      }
+
+      .corner-close::after {
+        transform: rotate(-45deg);
+      }
+
+      /*
+         * Intentionally NOT role=dialog / aria-modal.
+         * Tsk must recognize the floating popup implementation instead.
+         */
+      .special-offer-popup {
+        position: fixed;
+        right: 34px;
+        bottom: 82px;
+        z-index: 1001;
+        width: 390px;
+        padding: 30px;
+        border-radius: 14px;
+        background: #202027;
+        color: white;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+
+      .special-offer-popup h2 {
+        margin: 0 35px 10px 0;
+      }
+
+      .special-offer-popup p {
+        color: #c8c5cc;
+        line-height: 1.5;
+      }
+
+      .special-offer-popup .close-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        border: 0;
+        background: transparent;
+        color: #aaa;
+        font-size: 22px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="topbar">
+        <div class="brand">The Daily Scroll</div>
+
+        <nav>
+          <span>News</span>
+          <span>Life</span>
+          <span>Technology</span>
+          <span>Culture</span>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <div class="category">Life &amp; Technology</div>
+
+          <h1>Maybe the web doesn't need another thing asking for your attention</h1>
+
+          <div class="dek">A quiet investigation into why every website suddenly wants your email address before you've finished the first paragraph.</div>
+
+          <div class="byline">By Jamie Example · October 6, 2026 · 6 min read</div>
+        </div>
+
+        <aside class="sidebar">
+          <h2>Most read</h2>
+
+          <article>We tested doing absolutely nothing for ten minutes</article>
+
+          <article>Local developer discovers button still works without an account</article>
+
+          <article>Experts confirm you can simply let people read the page</article>
+        </aside>
+      </section>
+
+      <article class="story">
+        <p>There was once a brief and beautiful moment when opening a web page resulted in the web page appearing.</p>
+
+        <p>Today, arriving somewhere online can feel more like entering a negotiation. Would you like the newsletter? Can we send notifications? Are you sure you don't want the newsletter? Perhaps you'd prefer twenty percent off something you weren't planning to buy?</p>
+
+        <p>None of these questions are especially difficult. Finding the tiny button that means “please let me continue what I was doing,” however, has become something of a competitive design discipline.</p>
+      </article>
+    </main>
+
+    <div class="lab">
+      <button onclick="showSemantic()">Semantic</button>
+      <button onclick="showPromo()">Promotion</button>
+      <button onclick="showNonSemantic()">Non-semantic</button>
+      <button onclick="clearPopups()">Clear</button>
+    </div>
+
+    <script>
+      function clearPopups() {
+        document.querySelectorAll(".test-popup").forEach((element) => element.remove());
+      }
+
+      function makeOverlay() {
+        const overlay = document.createElement("div");
+        overlay.className = "overlay test-popup";
+        return overlay;
+      }
+
+      function showSemantic() {
+        clearPopups();
+
+        const overlay = makeOverlay();
+
+        /*
+         * Context path test:
+         * role=dialog makes this a recognized popup.
+         *
+         * The close candidate deliberately has only one 60-point clue:
+         * class contains "close".
+         *
+         * It should therefore be found through popup context, but it is
+         * NOT strong enough to identify itself globally.
+         */
+        overlay.innerHTML = `
+                <div class="modal" role="dialog" aria-modal="true"
+                     aria-labelledby="newsletter-title">
+                    <button class="corner-close"
+                            onclick="clearPopups()"></button>
+
+                    <h2 id="newsletter-title">Enjoying the article?</h2>
+
+                    <p>
+                        Get one thoughtful email every morning containing all
+                        the things we were going to interrupt you to mention.
+                    </p>
+
+                    <button class="primary">Join the newsletter</button>
+                </div>
+            `;
+
+        document.body.appendChild(overlay);
+      }
+
+      function showPromo() {
+        clearPopups();
+
+        const overlay = makeOverlay();
+
+        /*
+         * Strong-control test.
+         *
+         * aria-label="Close promotion" = 100
+         * class contains "close"        = 60
+         *
+         * Total = 160, enough to identify itself independently.
+         */
+        overlay.innerHTML = `
+                <div class="promo-popup">
+                    <button class="tiny-close"
+                            aria-label="Close promotion"
+                            onclick="clearPopups()">×</button>
+
+                    <div class="eyebrow">WAIT — BEFORE YOU GO</div>
+
+                    <h2>Your inbox could have more email in it</h2>
+
+                    <div class="offer">
+                        Join 47,281 readers receiving updates they definitely
+                        had time to ask for.
+                    </div>
+
+                    <button class="huge-cta">
+                        YES, SEND ME THINGS
+                    </button>
+
+                    <button class="quiet-dismiss"
+                            data-action="closeModal"
+                            onclick="clearPopups()">
+                        No thanks, I'll continue reading
+                    </button>
+                </div>
+            `;
+
+        document.body.appendChild(overlay);
+      }
+
+      function showNonSemantic() {
+        clearPopups();
+
+        /*
+         * No role=dialog and no aria-modal.
+         *
+         * The element is fixed and its class contains "popup", so
+         * looksLikePopup() should recognize it.
+         *
+         * close-btn supplies the 60-point contextual clue.
+         */
+        const popup = document.createElement("div");
+        popup.className = "special-offer-popup test-popup";
+
+        popup.innerHTML = `
+                <button class="close-btn"
+                        onclick="clearPopups()">×</button>
+
+                <h2>One more thing...</h2>
+
+                <p>
+                    This popup has no dialog semantics at all.
+                    It is simply fixed to the page and named like a popup.
+                </p>
+            `;
+
+        document.body.appendChild(popup);
+      }
+    </script>
+  </body>
+</html>
